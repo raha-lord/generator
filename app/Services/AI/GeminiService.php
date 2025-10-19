@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Log;
 class GeminiService
 {
     private string $apiKey;
-    private string $textModel = 'gemini-pro';
-    private string $visionModel = 'gemini-pro-vision';
-    private string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
+    private string $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
     public function __construct()
     {
@@ -24,18 +22,14 @@ class GeminiService
      *
      * @param string $prompt
      * @param array<string, mixed> $options
-     * @param string $model Model to use (text or vision)
      * @return array<string, mixed>
      * @throws \Exception
      */
-    public function generateContent(string $prompt, array $options = [], string $model = 'text'): array
+    public function generateContent(string $prompt, array $options = []): array
     {
         if (empty($this->apiKey)) {
             throw new \Exception('Gemini API key is not configured');
         }
-
-        $selectedModel = $model === 'vision' ? $this->visionModel : $this->textModel;
-        $apiUrl = "{$this->baseUrl}/{$selectedModel}:generateContent";
 
         try {
             $payload = [
@@ -55,21 +49,21 @@ class GeminiService
             ];
 
             Log::info('Gemini API request', [
-                'model' => $selectedModel,
                 'prompt_length' => strlen($prompt),
             ]);
 
             $response = Http::timeout(60)
-                ->post($apiUrl . '?key=' . $this->apiKey, $payload);
+                ->post($this->apiUrl . '?key=' . $this->apiKey, $payload);
 
             if (!$response->successful()) {
                 $errorBody = $response->json();
+                $errorMessage = $errorBody['error']['message'] ?? $response->body();
+
                 Log::error('Gemini API error', [
                     'status' => $response->status(),
                     'error' => $errorBody,
                 ]);
 
-                $errorMessage = $errorBody['error']['message'] ?? $response->body();
                 throw new \Exception('Gemini API request failed: ' . $errorMessage);
             }
 
