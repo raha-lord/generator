@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 class GeminiService
 {
     private string $apiKey;
-    private string $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    private string $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
     public function __construct()
     {
@@ -133,7 +133,7 @@ class GeminiService
             'metadata' => [
                 'topic' => $topic,
                 'style' => $style,
-                'model' => $this->textModel,
+                'model' => 'gemini-2.0-flash',
             ],
         ];
     }
