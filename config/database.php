@@ -95,9 +95,11 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => 'prefer',
+            'connect_timeout' => env('DB_TIMEOUT', 60),
             'options' => [
-                PDO::ATTR_TIMEOUT => 60,
+                PDO::ATTR_TIMEOUT => env('DB_TIMEOUT', 60),
                 PDO::ATTR_PERSISTENT => false,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ],
         ],
 
