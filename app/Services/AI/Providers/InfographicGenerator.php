@@ -28,31 +28,36 @@ class InfographicGenerator implements AIServiceInterface
     public function generate(string $prompt, array $options = []): mixed
     {
         try {
-            // Enhance prompt for infographic generation
-            $enhancedPrompt = $this->enhancePrompt($prompt);
+            Log::info('Starting infographic generation', [
+                'prompt' => substr($prompt, 0, 100),
+                'options' => $options,
+            ]);
 
-            // Call Gemini API
-            $response = $this->geminiService->generateContent($enhancedPrompt, $options);
+            // Use the new generateInfographicContent method
+            $result = $this->geminiService->generateInfographicContent($prompt, $options);
 
-            // Extract text content
-            $generatedText = $this->geminiService->extractText($response);
-
-            if (empty($generatedText)) {
-                throw new \Exception('Empty response from Gemini API');
+            if (empty($result['content'])) {
+                throw new \Exception('Empty content from Gemini API');
             }
+
+            Log::info('Infographic generation successful', [
+                'content_length' => strlen($result['content']),
+            ]);
 
             return [
                 'success' => true,
                 'data' => [
-                    'content' => $generatedText,
+                    'content' => $result['content'],
+                    'format' => $result['format'],
+                    'metadata' => $result['metadata'],
                     'prompt' => $prompt,
-                    'enhanced_prompt' => $enhancedPrompt,
                 ],
             ];
         } catch (\Exception $e) {
             Log::error('InfographicGenerator error', [
                 'message' => $e->getMessage(),
-                'prompt' => $prompt,
+                'prompt' => substr($prompt, 0, 100),
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return [
@@ -80,18 +85,5 @@ class InfographicGenerator implements AIServiceInterface
     public function getCost(): int
     {
         return $this->cost;
-    }
-
-    /**
-     * Enhance prompt for better infographic generation.
-     *
-     * @param string $prompt
-     * @return string
-     */
-    private function enhancePrompt(string $prompt): string
-    {
-        return "Create a detailed infographic content based on the following topic. "
-            . "Provide structured information that can be visualized as an infographic:\n\n"
-            . $prompt;
     }
 }

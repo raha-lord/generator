@@ -47,15 +47,22 @@ class InfographicController extends Controller
             }
 
             $generation = DB::transaction(function () use ($user, $request, $service, $cost) {
+                // Deduct credits first
                 if (!$this->balanceService->deduct($user, $cost, 'Infographic generation')) {
                     throw new \Exception('Failed to deduct credits');
                 }
 
+                // Get options from request
+                $style = $request->input('style', 'professional');
+                $format = $request->input('format', 'png');
+
+                // Create infographic record
                 $infographic = new Infographic();
                 $infographic->image_path = 'pending';
-                $infographic->format = 'png';
+                $infographic->format = $format;
                 $infographic->save();
 
+                // Create generation record
                 $generation = new Generation();
                 $generation->user_id = $user->id;
                 $generation->generatable_type = Infographic::class;
@@ -65,7 +72,11 @@ class InfographicController extends Controller
                 $generation->prompt = $request->input('prompt');
                 $generation->save();
 
-                $result = $service->generate($request->input('prompt'));
+                // Generate content with options
+                $result = $service->generate($request->input('prompt'), [
+                    'style' => $style,
+                    'format' => $format,
+                ]);
 
                 if (!$result['success']) {
                     $this->balanceService->refund($user, $cost, 'Refund for failed generation', Generation::class, $generation->id);
@@ -73,13 +84,18 @@ class InfographicController extends Controller
                     throw new \Exception($result['error'] ?? 'Generation failed');
                 }
 
+                // Store generated content
                 $generatedContent = $result['data']['content'] ?? 'Generated content';
-                $storedFile = $this->storageService->storeInfographic($generatedContent, 'txt');
 
+                // Store as markdown file
+                $storedFile = $this->storageService->storeInfographic($generatedContent, 'md');
+
+                // Update infographic record
                 $infographic->image_path = $storedFile['path'];
                 $infographic->file_size = strlen($generatedContent);
                 $infographic->save();
 
+                // Mark generation as completed
                 $generation->result_path = $storedFile['path'];
                 $generation->markAsCompleted();
 
