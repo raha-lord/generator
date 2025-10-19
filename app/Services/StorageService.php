@@ -131,6 +131,12 @@ class StorageService
      */
     private function isBase64(string $content): bool
     {
-        return base64_encode(base64_decode($content, true)) === $content;
+        $decoded = base64_decode($content, true);
+
+        if ($decoded === false) {
+            return false;
+        }
+
+        return base64_encode($decoded) === $content;
     }
 }
