@@ -1,0 +1,143 @@
+# Claude Code Configuration for AI Content Generator
+
+## Project Context
+
+This is a Laravel 11.x web application for AI content generation.
+MVP focuses on infographic generation via Gemini API.
+
+## Code Standards
+
+**CRITICAL: All code must follow these standards:**
+
+### PHP (Backend)
+- PSR-12 compliance (run `composer cs:fix` before committing)
+- `declare(strict_types=1);` at the start of EVERY PHP file
+- Type hints for ALL parameters and return values
+- Dependency injection via constructor
+- Thin controllers, business logic in services
+- PHPDoc for all public methods
+- No `dd()`, `var_dump()` in production code
+
+### JavaScript (Frontend)
+- ES6+ syntax (const/let, arrow functions, async/await)
+- Classes for code organization
+- No `var`, use `const` by default
+- Single quotes for strings
+- Semicolons required
+- No `console.log()` in production code
+
+### Blade Templates
+- Use `{{ }}` for escaping (not `{!! !!}` without reason)
+- Tailwind CSS utilities (avoid custom CSS)
+- Comments: `{{-- comment --}}`
+
+### Laravel Conventions
+- Models in `app/Models/`
+- Services in `app/Services/`
+- Use Form Requests for validation
+- Eloquent relationships with type hints
+- Route names for all routes
+
+## File References
+
+- **Full code standards:** `docs/code-style-standards.md`
+- **Database structure:** `docs/database-structure.md`
+- **Business logic:** `docs/business-logic.md`
+- **Tech stack:** `docs/tech-stack.md`
+- **Development plan:** `docs/mvp-development-plan.md`
+
+## Before Writing Code
+
+1. Read relevant documentation in `docs/` folder
+2. Check existing code patterns in the project
+3. Ensure type hints and strict types
+4. Follow PSR-12 and Laravel best practices
+5. Add PHPDoc comments for public methods
+
+## After Writing Code
+
+1. Run `composer cs:fix` (PHP formatting)
+2. Run `composer stan` (static analysis)
+3. Run `npm run lint:fix` (JavaScript linting)
+4. Ensure all tests pass
+
+## Key Principles
+
+- SOLID principles
+- DRY (Don't Repeat Yourself)
+- KISS (Keep It Simple)
+- Clean Code
+- English only (no transliteration)
+
+## Database
+
+- PostgreSQL 15+
+- Eloquent ORM
+- Migrations for all schema changes
+- Seeders for test data
+
+## Testing
+
+- PHPUnit for unit/feature tests
+- Minimum 80% code coverage
+- Mock external APIs (Gemini)
+
+## Common Patterns
+
+**Service Example:**
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services;
+
+class ExampleService
+{
+    public function __construct(
+        private readonly DependencyService $dependency
+    ) {
+    }
+
+    public function doSomething(string $param): Result
+    {
+        // Implementation
+    }
+}
+```
+
+**Controller Example:**
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\ExampleRequest;
+use App\Services\ExampleService;
+
+class ExampleController extends Controller
+{
+    public function __construct(
+        private readonly ExampleService $service
+    ) {
+    }
+
+    public function store(ExampleRequest $request): JsonResponse
+    {
+        $result = $this->service->doSomething($request->validated('field'));
+
+        return response()->json(['data' => $result]);
+    }
+}
+```
+
+## Reminders
+
+- Always use dependency injection
+- Always validate input data
+- Always handle exceptions properly
+- Always use transactions for multi-step DB operations
+- Never expose sensitive data in responses
+- Never commit `.env` file
