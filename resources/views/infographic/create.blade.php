@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+                <div class="p-6 text-gray-900 ">
                     
                     @if (session('error'))
                         <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
@@ -42,7 +42,7 @@
                                 name="prompt" 
                                 id="prompt" 
                                 rows="5"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-100"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  "
                                 placeholder="Describe the infographic you want to create. For example: 'Create an infographic about the benefits of renewable energy' or 'Statistics on global warming trends'"
                                 required
                                 minlength="10"
@@ -65,7 +65,7 @@
                             <select 
                                 name="style" 
                                 id="style"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-100"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  "
                             >
                                 <option value="">Default</option>
                                 <option value="modern" {{ old('style') === 'modern' ? 'selected' : '' }}>Modern</option>
@@ -87,7 +87,7 @@
                             <select 
                                 name="format" 
                                 id="format"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-100"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  "
                             >
                                 <option value="">Default (PNG)</option>
                                 <option value="png" {{ old('format') === 'png' ? 'selected' : '' }}>PNG</option>

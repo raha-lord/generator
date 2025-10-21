@@ -28,26 +28,28 @@ class InfographicGenerator implements AIServiceInterface
     public function generate(string $prompt, array $options = []): mixed
     {
         try {
-            Log::info('Starting infographic generation', [
+            Log::info('Starting infographic image generation', [
                 'prompt' => substr($prompt, 0, 100),
                 'options' => $options,
             ]);
 
-            // Use the new generateInfographicContent method
-            $result = $this->geminiService->generateInfographicContent($prompt, $options);
+            // Generate actual infographic image using Gemini
+            $result = $this->geminiService->generateInfographicImage($prompt, $options);
 
-            if (empty($result['content'])) {
-                throw new \Exception('Empty content from Gemini API');
+            if (empty($result['image_data'])) {
+                throw new \Exception('Empty image data from Gemini API');
             }
 
-            Log::info('Infographic generation successful', [
-                'content_length' => strlen($result['content']),
+            Log::info('Infographic image generation successful', [
+                'mime_type' => $result['mime_type'],
+                'format' => $result['format'],
             ]);
 
             return [
                 'success' => true,
                 'data' => [
-                    'content' => $result['content'],
+                    'image_data' => $result['image_data'],
+                    'mime_type' => $result['mime_type'],
                     'format' => $result['format'],
                     'metadata' => $result['metadata'],
                     'prompt' => $prompt,

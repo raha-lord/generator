@@ -59,7 +59,10 @@ class InfographicController extends Controller
                 // Create infographic record
                 $infographic = new Infographic();
                 $infographic->image_path = 'pending';
-                $infographic->format = $format;
+                $infographic->format = $format ?: 'png'; // Ensure not null
+                $infographic->width = 0;
+                $infographic->height = 0;
+                $infographic->file_size = 0;
                 $infographic->save();
 
                 // Create generation record
@@ -84,15 +87,21 @@ class InfographicController extends Controller
                     throw new \Exception($result['error'] ?? 'Generation failed');
                 }
 
-                // Store generated content
-                $generatedContent = $result['data']['content'] ?? 'Generated content';
+                // Store generated image
+                $imageData = $result['data']['image_data'] ?? null;
+                $imageFormat = $result['data']['format'] ?? 'png';
 
-                // Store as markdown file
-                $storedFile = $this->storageService->storeInfographic($generatedContent, 'md');
+                if (empty($imageData)) {
+                    throw new \Exception('No image data received');
+                }
+
+                // Decode base64 and store image
+                $storedFile = $this->storageService->storeInfographic($imageData, $imageFormat);
 
                 // Update infographic record
                 $infographic->image_path = $storedFile['path'];
-                $infographic->file_size = strlen($generatedContent);
+                $infographic->file_size = $this->storageService->size($storedFile['path']);
+                $infographic->format = $imageFormat;
                 $infographic->save();
 
                 // Mark generation as completed

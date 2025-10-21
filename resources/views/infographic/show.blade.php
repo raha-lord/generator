@@ -79,17 +79,30 @@
                     <!-- Generated Content -->
                     @if($generation->status === 'completed' && $generation->result_path)
                         <div class="mb-6">
-                            <h3 class="text-lg font-semibold mb-3">Generated Content</h3>
+                            <h3 class="text-lg font-semibold mb-3">Generated Infographic</h3>
                             <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
                                 @if($generation->generatable && $generation->generatable->image_path)
-                                    <div class="prose dark:prose-invert max-w-none">
-                                        @php
-                                            $content = Storage::disk('public')->get($generation->generatable->image_path);
-                                        @endphp
-                                        <pre class="whitespace-pre-wrap text-sm">{{ $content }}</pre>
+                                    <div class="flex justify-center">
+                                        <img
+                                            src="{{ Storage::disk('public')->url($generation->generatable->image_path) }}"
+                                            alt="Generated Infographic"
+                                            class="max-w-full h-auto rounded-lg shadow-lg"
+                                        />
+                                    </div>
+                                    <div class="mt-4 text-center">
+                                        <a
+                                            href="{{ Storage::disk('public')->url($generation->generatable->image_path) }}"
+                                            download
+                                            class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                                        >
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                            </svg>
+                                            Download Image
+                                        </a>
                                     </div>
                                 @else
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Content not available</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Image not available</p>
                                 @endif
                             </div>
                         </div>
