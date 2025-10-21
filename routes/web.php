@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GenerationHistoryController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\InfographicController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [InfographicController::class, 'create'])->name('create');
         Route::post('/', [InfographicController::class, 'store'])->name('store');
         Route::get('/{uuid}', [InfographicController::class, 'show'])->name('show');
+    });
+
+    // Image generation routes
+    Route::prefix('image')->name('image.')->group(function () {
+        Route::get('/create', [ImageController::class, 'create'])->name('create');
+        Route::post('/', [ImageController::class, 'store'])->name('store');
+        Route::get('/{uuid}', [ImageController::class, 'show'])->name('show');
     });
 
     // Generation history routes
