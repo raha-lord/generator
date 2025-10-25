@@ -110,14 +110,14 @@
                                 @if($generation->generatable && $generation->generatable->image_path)
                                     <div class="flex justify-center">
                                         <img
-                                            src="{{ Storage::disk('public')->url($generation->generatable->image_path) }}"
+                                            src="{{ $generation->generatable->image_url }}"
                                             alt="Generated Image"
                                             class="max-w-full h-auto rounded-lg shadow-lg"
                                         />
                                     </div>
                                     <div class="mt-4 text-center">
                                         <a
-                                            href="{{ Storage::disk('public')->url($generation->generatable->image_path) }}"
+                                            href="{{ $generation->generatable->image_url }}"
                                             download
                                             class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                                         >

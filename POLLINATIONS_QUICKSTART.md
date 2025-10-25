@@ -20,7 +20,19 @@ docker-compose exec app php artisan migrate
 php artisan migrate
 ```
 
-### 2. Готово! 🎉
+### 2. Создайте symbolic link для storage
+
+```bash
+# В Docker
+docker-compose exec app php artisan storage:link
+
+# Локально
+php artisan storage:link
+```
+
+**⚠️ Это важно!** Без symlink изображения не будут отображаться в браузере.
+
+### 3. Готово! 🎉
 
 Откройте приложение и найдите новую кнопку **"Generate AI Image"** на Dashboard.
 
