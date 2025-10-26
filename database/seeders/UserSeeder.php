@@ -17,69 +17,66 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $password = Hash::make('password');
-
-        // Clear existing test data
         $this->command->info('Creating users...');
 
         try {
-            // Create admin user
-            $admin = new User();
-            $admin->name = 'Admin User';
-            $admin->email = 'admin@example.com';
-            $admin->password = $password;
-            $admin->role = 'admin';
-            $admin->is_active = true;
-            $admin->email_verified_at = now();
-            $admin->save();
-            $this->command->info('Created admin user');
-
-            Balance::create([
-                'user_id' => $admin->id,
+            $this->createUserIfNotExists([
+                'name' => 'Admin User',
+                'email' => 'admin@example.com',
+                'role' => 'admin',
                 'credits' => 10000,
-                'reserved_credits' => 0,
-            ]);
+            ], $password);
 
-            // Create regular test user
-            $user = new User();
-            $user->name = 'Test User';
-            $user->email = 'user@example.com';
-            $user->password = $password;
-            $user->role = 'user';
-            $user->is_active = true;
-            $user->email_verified_at = now();
-            $user->save();
-            $this->command->info('Created test user');
-
-            Balance::create([
-                'user_id' => $user->id,
+            $this->createUserIfNotExists([
+                'name' => 'Test User',
+                'email' => 'user@example.com',
+                'role' => 'user',
                 'credits' => 1000,
-                'reserved_credits' => 0,
-            ]);
+            ], $password);
 
-            // Create 5 additional random users
             for ($i = 1; $i <= 5; $i++) {
-                $randomUser = new User();
-                $randomUser->name = "User {$i}";
-                $randomUser->email = "user{$i}@example.com";
-                $randomUser->password = $password;
-                $randomUser->role = 'user';
-                $randomUser->is_active = true;
-                $randomUser->email_verified_at = now();
-                $randomUser->save();
-
-                Balance::create([
-                    'user_id' => $randomUser->id,
+                $this->createUserIfNotExists([
+                    'name' => "User {$i}",
+                    'email' => "user{$i}@example.com",
+                    'role' => 'user',
                     'credits' => 1000,
-                    'reserved_credits' => 0,
-                ]);
-
-                $this->command->info("Created user {$i}");
+                ], $password);
             }
 
-            $this->command->info('Successfully created 7 users with balances (1 admin, 6 regular users)');
+            $this->command->info('✅ Successfully created users with balances');
         } catch (\Exception $e) {
-            $this->command->error('Failed to seed: ' . $e->getMessage());
+            $this->command->error('❌ Failed to seed: ' . $e->getMessage());
             throw $e;
         }
+    }
+
+    /**
+     * Create user and balance if not exists.
+     */
+    private function createUserIfNotExists(array $data, string $password): void
+    {
+        $user = User::where('email', $data['email'])->first();
+
+        if ($user) {
+            $this->command->warn("Skipped: user with email {$data['email']} already exists");
+            return;
+        }
+
+        $user = new User();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = $password;
+        $user->role = $data['role'];
+        $user->is_active = true;
+        $user->email_verified_at = now();
+        $user->save();
+
+        Balance::create([
+            'user_id' => $user->id,
+            'credits' => $data['credits'],
+            'reserved_credits' => 0,
+        ]);
+
+        $this->command->info("Created: {$data['name']} ({$data['email']})");
     }
 }
