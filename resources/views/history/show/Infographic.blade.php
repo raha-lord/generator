@@ -72,7 +72,7 @@
                     <div class="mb-6">
                         <h3 class="text-lg font-semibold mb-3">Original Prompt</h3>
                         <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                            <p class="text-sm">{{ $generation->prompt }}</p>
+                            <p class="text-sm text-gray-900 dark:text-gray-100">{{ $generation->prompt }}</p>
                         </div>
                     </div>
 
