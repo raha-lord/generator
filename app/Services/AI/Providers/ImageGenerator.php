@@ -99,7 +99,7 @@ class ImageGenerator implements AIServiceInterface, PricingAwareInterface
      *
      * @return int
      */
-    protected function getProviderId(): int
+    public function getProviderId(): int
     {
         return AiProvider::POLLINATIONS;
     }
@@ -110,7 +110,7 @@ class ImageGenerator implements AIServiceInterface, PricingAwareInterface
      * @param array $requestData
      * @return array
      */
-    protected function getPricingParameters(array $requestData): array
+    public function getPricingParameters(array $requestData): array
     {
         $width = $requestData['width'] ?? 512;
         $height = $requestData['height'] ?? 512;

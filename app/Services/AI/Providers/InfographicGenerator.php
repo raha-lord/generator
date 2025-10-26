@@ -88,7 +88,7 @@ class InfographicGenerator implements AIServiceInterface, PricingAwareInterface
      *
      * @return int
      */
-    protected function getProviderId(): int
+    public function getProviderId(): int
     {
         return AiProvider::GEMINI;
     }
@@ -99,7 +99,7 @@ class InfographicGenerator implements AIServiceInterface, PricingAwareInterface
      * @param array $requestData
      * @return array
      */
-    protected function getPricingParameters(array $requestData): array
+    public function getPricingParameters(array $requestData): array
     {
         $width = $requestData['width'] ?? 1024;
         $height = $requestData['height'] ?? 1024;
