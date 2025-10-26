@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Services\AI\Providers;
 
+use App\Models\Pricing\AiProvider;
 use App\Services\AI\AIServiceInterface;
+use App\Services\AI\Concerns\HasPricing;
+use App\Services\AI\Contracts\PricingAwareInterface;
 use App\Services\AI\PollinationsService;
 use Illuminate\Support\Facades\Log;
 
-class ImageGenerator implements AIServiceInterface
+class ImageGenerator implements AIServiceInterface, PricingAwareInterface
 {
+    use HasPricing;
+
     private PollinationsService $pollinationsService;
-    private int $cost = 5; // Cost in credits (cheaper than infographics)
 
     public function __construct()
     {
@@ -81,16 +85,6 @@ class ImageGenerator implements AIServiceInterface
     }
 
     /**
-     * Get generation cost in credits.
-     *
-     * @return int
-     */
-    public function getCost(): int
-    {
-        return $this->cost;
-    }
-
-    /**
      * Get available models.
      *
      * @return array<string, string>
@@ -98,5 +92,34 @@ class ImageGenerator implements AIServiceInterface
     public function getAvailableModels(): array
     {
         return $this->pollinationsService->getAvailableModels();
+    }
+
+    /**
+     * Get AI provider ID
+     *
+     * @return int
+     */
+    protected function getProviderId(): int
+    {
+        return AiProvider::POLLINATIONS;
+    }
+
+    /**
+     * Get pricing parameters for the request
+     *
+     * @param array $requestData
+     * @return array
+     */
+    protected function getPricingParameters(array $requestData): array
+    {
+        $width = $requestData['width'] ?? 512;
+        $height = $requestData['height'] ?? 512;
+        $model = $requestData['model'] ?? 'flux';
+
+        return [
+            'resolution' => "{$width}x{$height}",
+            'model' => $model,
+            'enhance' => $requestData['enhance'] ?? false,
+        ];
     }
 }

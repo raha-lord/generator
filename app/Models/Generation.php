@@ -12,6 +12,11 @@ use Illuminate\Support\Str;
 class Generation extends Model
 {
     /**
+     * The table associated with the model.
+     */
+    protected $table = 'generations.generations';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>

@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Services\AI\Providers;
 
+use App\Models\Pricing\AiProvider;
 use App\Services\AI\AIServiceInterface;
+use App\Services\AI\Concerns\HasPricing;
+use App\Services\AI\Contracts\PricingAwareInterface;
 use App\Services\AI\GeminiService;
 use Illuminate\Support\Facades\Log;
 
-class InfographicGenerator implements AIServiceInterface
+class InfographicGenerator implements AIServiceInterface, PricingAwareInterface
 {
+    use HasPricing;
+
     private GeminiService $geminiService;
-    private int $cost = 10; // Cost in credits as per TZ
 
     public function __construct()
     {
@@ -80,12 +84,29 @@ class InfographicGenerator implements AIServiceInterface
     }
 
     /**
-     * Get generation cost in credits.
+     * Get AI provider ID
      *
      * @return int
      */
-    public function getCost(): int
+    protected function getProviderId(): int
     {
-        return $this->cost;
+        return AiProvider::GEMINI;
+    }
+
+    /**
+     * Get pricing parameters for the request
+     *
+     * @param array $requestData
+     * @return array
+     */
+    protected function getPricingParameters(array $requestData): array
+    {
+        $width = $requestData['width'] ?? 1024;
+        $height = $requestData['height'] ?? 1024;
+
+        return [
+            'resolution' => "{$width}x{$height}",
+            'complexity' => $requestData['complexity'] ?? 'standard',
+        ];
     }
 }

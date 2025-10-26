@@ -14,7 +14,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // Сначала создаём пользователей и балансы
             UserSeeder::class,
+
+            // Затем настраиваем систему прайсинга
+            AiProviderSeeder::class,
+            ProviderPricingSeeder::class,
+            CurrencyRateSeeder::class,
         ]);
     }
 }

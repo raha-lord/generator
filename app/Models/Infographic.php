@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Infographic extends Model
 {
     /**
+     * The table associated with the model.
+     */
+    protected $table = 'generations.infographics';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
