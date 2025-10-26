@@ -7,7 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
-class Infographic extends Model
+class Image extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -21,6 +21,9 @@ class Infographic extends Model
         'height',
         'format',
         'file_size',
+        'model',
+        'seed',
+        'enhanced',
     ];
 
     /**
@@ -34,11 +37,12 @@ class Infographic extends Model
             'width' => 'integer',
             'height' => 'integer',
             'file_size' => 'integer',
+            'enhanced' => 'boolean',
         ];
     }
 
     /**
-     * Get the generation record for this infographic.
+     * Get the generation record for this image.
      */
     public function generation(): MorphOne
     {
@@ -103,5 +107,18 @@ class Infographic extends Model
         }
 
         return round($bytes, 2) . ' ' . $units[$i];
+    }
+
+    /**
+     * Get display name for the AI model.
+     */
+    public function getModelDisplayNameAttribute(): string
+    {
+        return match ($this->model) {
+            'flux' => 'Flux',
+            'flux-realism' => 'Flux Realism',
+            'turbo' => 'Turbo',
+            default => ucfirst($this->model),
+        };
     }
 }

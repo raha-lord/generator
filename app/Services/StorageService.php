@@ -42,6 +42,31 @@ class StorageService
     }
 
     /**
+     * Store AI-generated image.
+     *
+     * @param string $content Base64 or binary content
+     * @param string $format Image format (png, jpg, etc.)
+     * @return array{path: string, url: string}
+     */
+    public function storeImage(string $content, string $format = 'png'): array
+    {
+        $filename = $this->generateFilename('image', $format);
+        $path = "images/{$filename}";
+
+        // Decode base64 if needed
+        if ($this->isBase64($content)) {
+            $content = base64_decode($content);
+        }
+
+        Storage::disk($this->disk)->put($path, $content);
+
+        return [
+            'path' => $path,
+            'url' => Storage::disk($this->disk)->url($path),
+        ];
+    }
+
+    /**
      * Store thumbnail image.
      *
      * @param string $content Image content

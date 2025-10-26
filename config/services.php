@@ -39,4 +39,11 @@ return [
         'api_key' => env('GEMINI_API_KEY'),
     ],
 
+    'pollinations' => [
+        'base_url' => env('POLLINATIONS_BASE_URL', 'https://image.pollinations.ai/prompt'),
+        'default_model' => env('POLLINATIONS_DEFAULT_MODEL', 'flux'),
+        'default_width' => env('POLLINATIONS_DEFAULT_WIDTH', 1024),
+        'default_height' => env('POLLINATIONS_DEFAULT_HEIGHT', 1024),
+    ],
+
 ];

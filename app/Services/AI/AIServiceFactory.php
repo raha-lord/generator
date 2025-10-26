@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\AI;
 
 use App\Services\AI\Providers\InfographicGenerator;
+use App\Services\AI\Providers\ImageGenerator;
 use InvalidArgumentException;
 
 class AIServiceFactory
@@ -20,6 +21,7 @@ class AIServiceFactory
     {
         return match ($type) {
             'infographic' => new InfographicGenerator(),
+            'image' => new ImageGenerator(),
             // Future services (заглушки пока не реализованы):
             // 'text' => new TextGenerator(),
             // 'description' => new DescriptionGenerator(),
@@ -36,6 +38,7 @@ class AIServiceFactory
     {
         return [
             'infographic',
+            'image',
             // 'text',
             // 'description',
         ];

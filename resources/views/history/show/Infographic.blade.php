@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
+
             @if (session('success'))
                 <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
@@ -16,11 +16,11 @@
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    
+
                     <!-- Generation Info -->
                     <div class="mb-6">
                         <h3 class="text-lg font-semibold mb-3">Generation Information</h3>
-                        
+
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             <div>
                                 <span class="text-gray-600 dark:text-gray-400">Status:</span>
@@ -36,17 +36,17 @@
                                     @endif
                                 </span>
                             </div>
-                            
+
                             <div>
                                 <span class="text-gray-600 dark:text-gray-400">Cost:</span>
                                 <span class="ml-2 font-medium">{{ $generation->cost }} credits</span>
                             </div>
-                            
+
                             <div>
                                 <span class="text-gray-600 dark:text-gray-400">Created:</span>
                                 <span class="ml-2 font-medium">{{ $generation->created_at->format('Y-m-d H:i:s') }}</span>
                             </div>
-                            
+
                             <div>
                                 <span class="text-gray-600 dark:text-gray-400">Completed:</span>
                                 <span class="ml-2 font-medium">

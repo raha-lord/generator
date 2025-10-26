@@ -1,13 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Infographic Details') }}
+            {{ __('AI Image Details') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
+
             @if (session('success'))
                 <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
@@ -16,11 +16,11 @@
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    
+
                     <!-- Generation Info -->
                     <div class="mb-6">
                         <h3 class="text-lg font-semibold mb-3">Generation Information</h3>
-                        
+
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             <div>
                                 <span class="text-gray-600 dark:text-gray-400">Status:</span>
@@ -36,23 +36,49 @@
                                     @endif
                                 </span>
                             </div>
-                            
+
                             <div>
                                 <span class="text-gray-600 dark:text-gray-400">Cost:</span>
                                 <span class="ml-2 font-medium">{{ $generation->cost }} credits</span>
                             </div>
-                            
+
                             <div>
                                 <span class="text-gray-600 dark:text-gray-400">Created:</span>
                                 <span class="ml-2 font-medium">{{ $generation->created_at->format('Y-m-d H:i:s') }}</span>
                             </div>
-                            
+
                             <div>
                                 <span class="text-gray-600 dark:text-gray-400">Completed:</span>
                                 <span class="ml-2 font-medium">
                                     {{ $generation->completed_at ? $generation->completed_at->format('Y-m-d H:i:s') : 'N/A' }}
                                 </span>
                             </div>
+
+                            @if($generation->generatable)
+                                <div>
+                                    <span class="text-gray-600 dark:text-gray-400">Dimensions:</span>
+                                    <span class="ml-2 font-medium">{{ $generation->generatable->width }} x {{ $generation->generatable->height }}px</span>
+                                </div>
+
+                                <div>
+                                    <span class="text-gray-600 dark:text-gray-400">AI Model:</span>
+                                    <span class="ml-2 font-medium">{{ $generation->generatable->model_display_name }}</span>
+                                </div>
+
+                                @if($generation->generatable->enhanced)
+                                    <div>
+                                        <span class="text-gray-600 dark:text-gray-400">Enhanced:</span>
+                                        <span class="ml-2 font-medium text-green-600 dark:text-green-400">Yes</span>
+                                    </div>
+                                @endif
+
+                                @if($generation->generatable->seed)
+                                    <div>
+                                        <span class="text-gray-600 dark:text-gray-400">Seed:</span>
+                                        <span class="ml-2 font-mono text-xs">{{ $generation->generatable->seed }}</span>
+                                    </div>
+                                @endif
+                            @endif
 
                             <div class="col-span-2">
                                 <span class="text-gray-600 dark:text-gray-400">UUID:</span>
@@ -79,13 +105,13 @@
                     <!-- Generated Content -->
                     @if($generation->status === 'completed' && $generation->result_path)
                         <div class="mb-6">
-                            <h3 class="text-lg font-semibold mb-3">Generated Infographic</h3>
+                            <h3 class="text-lg font-semibold mb-3">Generated Image</h3>
                             <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
                                 @if($generation->generatable && $generation->generatable->image_path)
                                     <div class="flex justify-center">
                                         <img
                                             src="{{ $generation->generatable->image_url }}"
-                                            alt="Generated Infographic"
+                                            alt="Generated Image"
                                             class="max-w-full h-auto rounded-lg shadow-lg"
                                         />
                                     </div>
@@ -100,6 +126,12 @@
                                             Download Image
                                         </a>
                                     </div>
+
+                                    @if($generation->generatable->file_size)
+                                        <div class="mt-2 text-center text-xs text-gray-500 dark:text-gray-400">
+                                            File size: {{ $generation->generatable->human_file_size }}
+                                        </div>
+                                    @endif
                                 @else
                                     <p class="text-sm text-gray-500 dark:text-gray-400">Image not available</p>
                                 @endif
@@ -109,7 +141,7 @@
                         <div class="mb-6">
                             <div class="info-box">
                                 <p class="text-sm">
-                                    Your infographic is being generated. Please refresh this page in a few moments.
+                                    Your image is being generated. Please refresh this page in a few moments.
                                 </p>
                             </div>
                         </div>
@@ -122,6 +154,13 @@
                             </div>
                         </div>
                     @endif
+
+                    <!-- Powered by notice -->
+                    <div class="mb-6 text-center">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            Powered by <a href="https://pollinations.ai" target="_blank" class="underline hover:text-gray-700 dark:hover:text-gray-300">Pollinations.ai</a>
+                        </p>
+                    </div>
 
                     <!-- Actions -->
                     <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
@@ -158,7 +197,7 @@
                                 </form>
                             @endif
 
-                            <a href="{{ route('infographic.create') }}" class="text-sm px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                            <a href="{{ route('image.create') }}" class="text-sm px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
                                 Create New
                             </a>
                         </div>
