@@ -50,7 +50,28 @@ class Infographic extends Model
      */
     public function getImageUrlAttribute(): string
     {
-        return asset('storage/' . $this->image_path);
+        // Get generation UUID through the morphOne relationship
+        $generation = $this->generation;
+
+        if (!$generation) {
+            return '';
+        }
+
+        return route('file.show', $generation->uuid);
+    }
+
+    /**
+     * Get download URL for the image.
+     */
+    public function getDownloadUrlAttribute(): string
+    {
+        $generation = $this->generation;
+
+        if (!$generation) {
+            return '';
+        }
+
+        return route('file.download', $generation->uuid);
     }
 
     /**
@@ -58,9 +79,9 @@ class Infographic extends Model
      */
     public function getThumbnailUrlAttribute(): ?string
     {
-        return $this->thumbnail_path
-            ? asset('storage/' . $this->thumbnail_path)
-            : null;
+        // For now, thumbnails use the same route as full images
+        // In the future, could add separate thumbnail route
+        return $this->image_url;
     }
 
     /**

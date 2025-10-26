@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\GenerationHistoryController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\InfographicController;
@@ -13,6 +14,12 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// File routes (public access with internal permission check)
+Route::prefix('file')->name('file.')->group(function () {
+    Route::get('/{uuid}', [FileController::class, 'show'])->name('show');
+    Route::get('/{uuid}/download', [FileController::class, 'download'])->name('download');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

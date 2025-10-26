@@ -117,8 +117,7 @@
                                     </div>
                                     <div class="mt-4 text-center">
                                         <a
-                                            href="{{ $generation->generatable->image_url }}"
-                                            download
+                                            href="{{ $generation->generatable->download_url }}"
                                             class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                                         >
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
