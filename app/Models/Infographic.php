@@ -26,6 +26,9 @@ class Infographic extends Model
         'height',
         'format',
         'file_size',
+        'slides',
+        'provider_id',
+        'slides_count',
     ];
 
     /**
@@ -39,6 +42,9 @@ class Infographic extends Model
             'width' => 'integer',
             'height' => 'integer',
             'file_size' => 'integer',
+            'slides' => 'array',
+            'provider_id' => 'integer',
+            'slides_count' => 'integer',
         ];
     }
 
@@ -108,5 +114,43 @@ class Infographic extends Model
         }
 
         return round($bytes, 2) . ' ' . $units[$i];
+    }
+
+    /**
+     * Get all slide paths (combines image_path and slides array).
+     *
+     * @return array<string>
+     */
+    public function getAllSlides(): array
+    {
+        $slides = [];
+
+        // Add main image_path if exists
+        if ($this->image_path && $this->image_path !== 'pending') {
+            $slides[] = $this->image_path;
+        }
+
+        // Add additional slides from JSON array
+        if (!empty($this->slides)) {
+            $slides = array_merge($slides, $this->slides);
+        }
+
+        return $slides;
+    }
+
+    /**
+     * Check if this is a multi-slide infographic.
+     */
+    public function isMultiSlide(): bool
+    {
+        return $this->slides_count > 1;
+    }
+
+    /**
+     * Get the AI provider relationship.
+     */
+    public function provider()
+    {
+        return $this->belongsTo(\App\Models\Pricing\AiProvider::class, 'provider_id');
     }
 }

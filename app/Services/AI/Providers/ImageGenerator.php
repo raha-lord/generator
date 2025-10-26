@@ -75,6 +75,51 @@ class ImageGenerator implements AIServiceInterface, PricingAwareInterface
     }
 
     /**
+     * Generate multiple images in batch.
+     *
+     * @param string $prompt
+     * @param int $count
+     * @param array<string, mixed> $options
+     * @return array Array of generation results
+     */
+    public function generateBatch(string $prompt, int $count, array $options = []): array
+    {
+        Log::info('Starting batch image generation', [
+            'prompt' => substr($prompt, 0, 100),
+            'count' => $count,
+            'options' => $options,
+        ]);
+
+        $results = [];
+
+        // Pollinations doesn't support native batch, so we make sequential requests
+        for ($i = 0; $i < $count; $i++) {
+            Log::info("Generating image {$i}/{$count}");
+            $result = $this->generate($prompt, $options);
+            $results[] = $result;
+
+            // If any generation fails, continue but log it
+            if (!$result['success']) {
+                Log::warning("Batch generation failed for image {$i}/{$count}", [
+                    'error' => $result['error'] ?? 'Unknown error',
+                ]);
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Pollinations doesn't support native batch generation.
+     *
+     * @return bool
+     */
+    public function supportsBatchGeneration(): bool
+    {
+        return false;
+    }
+
+    /**
      * Get service type.
      *
      * @return string

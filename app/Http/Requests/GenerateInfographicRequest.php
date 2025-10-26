@@ -40,6 +40,29 @@ class GenerateInfographicRequest extends FormRequest
                 'string',
                 'in:png,jpg,svg',
             ],
+            'provider_id' => [
+                'nullable',
+                'integer',
+                'in:1,2', // 1=Pollinations, 2=Gemini
+            ],
+            'slides_count' => [
+                'nullable',
+                'integer',
+                'min:1',
+                'max:10',
+            ],
+            'width' => [
+                'nullable',
+                'integer',
+                'min:256',
+                'max:4096',
+            ],
+            'height' => [
+                'nullable',
+                'integer',
+                'min:256',
+                'max:4096',
+            ],
         ];
     }
 
@@ -56,6 +79,13 @@ class GenerateInfographicRequest extends FormRequest
             'prompt.max' => 'Prompt cannot exceed :max characters.',
             'style.in' => 'Invalid style selected. Choose from: modern, classic, minimalist, colorful, professional.',
             'format.in' => 'Invalid format selected. Choose from: png, jpg, svg.',
+            'provider_id.in' => 'Invalid AI provider selected.',
+            'slides_count.min' => 'Slides count must be at least :min.',
+            'slides_count.max' => 'Slides count cannot exceed :max.',
+            'width.min' => 'Width must be at least :min pixels.',
+            'width.max' => 'Width cannot exceed :max pixels.',
+            'height.min' => 'Height must be at least :min pixels.',
+            'height.max' => 'Height cannot exceed :max pixels.',
         ];
     }
 
@@ -70,6 +100,10 @@ class GenerateInfographicRequest extends FormRequest
             'prompt' => 'infographic prompt',
             'style' => 'visual style',
             'format' => 'output format',
+            'provider_id' => 'AI provider',
+            'slides_count' => 'number of slides',
+            'width' => 'image width',
+            'height' => 'image height',
         ];
     }
 }

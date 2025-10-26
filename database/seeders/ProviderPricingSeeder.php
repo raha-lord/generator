@@ -60,28 +60,28 @@ class ProviderPricingSeeder extends Seeder
                 'sort_order' => 4,
             ],
 
-            // Gemini - Infographic generation
+            // Gemini - Image generation (used for infographics)
             [
                 'provider_id' => AiProvider::GEMINI,
-                'service_type' => 'infographic',
-                'pricing_key' => 'gemini_infographic_1024x1024',
-                'display_name' => 'Инфографика 1024×1024 (Стандарт)',
+                'service_type' => 'image',
+                'pricing_key' => 'gemini_image_1024x1024',
+                'display_name' => 'Изображение 1024×1024 (Gemini)',
                 'token_cost' => 10,
                 'conditions' => ['resolution' => '1024x1024'],
-                'is_default' => true,
+                'is_default' => false,
                 'is_active' => true,
-                'sort_order' => 1,
+                'sort_order' => 5,
             ],
             [
                 'provider_id' => AiProvider::GEMINI,
-                'service_type' => 'infographic',
-                'pricing_key' => 'gemini_infographic_2048x2048',
-                'display_name' => 'Инфографика 2048×2048 (HD)',
+                'service_type' => 'image',
+                'pricing_key' => 'gemini_image_2048x2048',
+                'display_name' => 'Изображение 2048×2048 (Gemini HD)',
                 'token_cost' => 20,
                 'conditions' => ['resolution' => '2048x2048'],
                 'is_default' => false,
                 'is_active' => true,
-                'sort_order' => 2,
+                'sort_order' => 6,
             ],
         ];
 
