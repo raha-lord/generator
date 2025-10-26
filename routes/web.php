@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\CurrencyRateController;
+use App\Http\Controllers\Admin\ProviderPricingController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\GenerationHistoryController;
 use App\Http\Controllers\ImageController;
@@ -48,6 +51,22 @@ Route::middleware('auth')->group(function () {
         Route::post('/{uuid}/toggle-public', [GenerationHistoryController::class, 'togglePublic'])->name('togglePublic');
         Route::post('/{uuid}/retry', [GenerationHistoryController::class, 'retry'])->name('retry');
     });
+});
+
+// Admin routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Admin Dashboard
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Provider Pricing Management
+    Route::resource('pricing', ProviderPricingController::class);
+    Route::post('pricing/{pricing}/toggle-active', [ProviderPricingController::class, 'toggleActive'])
+        ->name('pricing.toggle-active');
+
+    // Currency Rate Management
+    Route::resource('rates', CurrencyRateController::class);
+    Route::post('rates/{rate}/toggle-active', [CurrencyRateController::class, 'toggleActive'])
+        ->name('rates.toggle-active');
 });
 
 require __DIR__.'/auth.php';

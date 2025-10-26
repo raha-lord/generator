@@ -24,6 +24,11 @@
                     <x-nav-link :href="route('history.index')" :active="request()->routeIs('history.*')">
                         {{ __('History') }}
                     </x-nav-link>
+                    @if(Auth::user()->role === 'admin')
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                            {{ __('Admin Panel') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -88,6 +93,11 @@
             <x-responsive-nav-link :href="route('history.index')" :active="request()->routeIs('history.*')">
                 {{ __('History') }}
             </x-responsive-nav-link>
+            @if(Auth::user()->role === 'admin')
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                    {{ __('Admin Panel') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

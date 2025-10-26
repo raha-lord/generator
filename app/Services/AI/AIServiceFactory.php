@@ -13,14 +13,15 @@ class AIServiceFactory
     /**
      * Create an AI service instance based on type.
      *
-     * @param string $type Service type ('infographic', 'text', 'description')
+     * @param string $type Service type ('infographic', 'image', 'text', 'description')
+     * @param array<string, mixed> $config Configuration options (e.g., ['provider_id' => 1])
      * @return AIServiceInterface
      * @throws InvalidArgumentException
      */
-    public static function make(string $type): AIServiceInterface
+    public static function make(string $type, array $config = []): AIServiceInterface
     {
         return match ($type) {
-            'infographic' => new InfographicGenerator(),
+            'infographic' => new InfographicGenerator($config['provider_id'] ?? null),
             'image' => new ImageGenerator(),
             // Future services (заглушки пока не реализованы):
             // 'text' => new TextGenerator(),

@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Image extends Model
 {
     /**
+     * The table associated with the model.
+     */
+    protected $table = 'generations.images';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>

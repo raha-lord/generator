@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Services\AI\Providers;
 
+use App\Models\Pricing\AiProvider;
 use App\Services\AI\AIServiceInterface;
+use App\Services\AI\Concerns\HasPricing;
+use App\Services\AI\Contracts\PricingAwareInterface;
 use App\Services\AI\PollinationsService;
 use Illuminate\Support\Facades\Log;
 
-class ImageGenerator implements AIServiceInterface
+class ImageGenerator implements AIServiceInterface, PricingAwareInterface
 {
+    use HasPricing;
+
     private PollinationsService $pollinationsService;
-    private int $cost = 5; // Cost in credits (cheaper than infographics)
 
     public function __construct()
     {
@@ -71,6 +75,51 @@ class ImageGenerator implements AIServiceInterface
     }
 
     /**
+     * Generate multiple images in batch.
+     *
+     * @param string $prompt
+     * @param int $count
+     * @param array<string, mixed> $options
+     * @return array Array of generation results
+     */
+    public function generateBatch(string $prompt, int $count, array $options = []): array
+    {
+        Log::info('Starting batch image generation', [
+            'prompt' => substr($prompt, 0, 100),
+            'count' => $count,
+            'options' => $options,
+        ]);
+
+        $results = [];
+
+        // Pollinations doesn't support native batch, so we make sequential requests
+        for ($i = 0; $i < $count; $i++) {
+            Log::info("Generating image {$i}/{$count}");
+            $result = $this->generate($prompt, $options);
+            $results[] = $result;
+
+            // If any generation fails, continue but log it
+            if (!$result['success']) {
+                Log::warning("Batch generation failed for image {$i}/{$count}", [
+                    'error' => $result['error'] ?? 'Unknown error',
+                ]);
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Pollinations doesn't support native batch generation.
+     *
+     * @return bool
+     */
+    public function supportsBatchGeneration(): bool
+    {
+        return false;
+    }
+
+    /**
      * Get service type.
      *
      * @return string
@@ -81,16 +130,6 @@ class ImageGenerator implements AIServiceInterface
     }
 
     /**
-     * Get generation cost in credits.
-     *
-     * @return int
-     */
-    public function getCost(): int
-    {
-        return $this->cost;
-    }
-
-    /**
      * Get available models.
      *
      * @return array<string, string>
@@ -98,5 +137,34 @@ class ImageGenerator implements AIServiceInterface
     public function getAvailableModels(): array
     {
         return $this->pollinationsService->getAvailableModels();
+    }
+
+    /**
+     * Get AI provider ID
+     *
+     * @return int
+     */
+    public function getProviderId(): int
+    {
+        return AiProvider::POLLINATIONS;
+    }
+
+    /**
+     * Get pricing parameters for the request
+     *
+     * @param array $requestData
+     * @return array
+     */
+    public function getPricingParameters(array $requestData): array
+    {
+        $width = $requestData['width'] ?? 512;
+        $height = $requestData['height'] ?? 512;
+        $model = $requestData['model'] ?? 'flux';
+
+        return [
+            'resolution' => "{$width}x{$height}",
+            'model' => $model,
+            'enhance' => $requestData['enhance'] ?? false,
+        ];
     }
 }

@@ -11,6 +11,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class BalanceTransaction extends Model
 {
     /**
+     * The table associated with the model.
+     */
+    protected $table = 'balance.balance_transactions';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
