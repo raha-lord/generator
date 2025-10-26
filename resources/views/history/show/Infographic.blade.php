@@ -71,7 +71,7 @@
                     <!-- Original Prompt -->
                     <div class="mb-6">
                         <h3 class="text-lg font-semibold mb-3">Original Prompt</h3>
-                        <div class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 rounded-lg">
+                        <div class="prompt-box">
                             <p class="text-sm">{{ $generation->prompt }}</p>
                         </div>
                     </div>
@@ -107,16 +107,16 @@
                         </div>
                     @elseif($generation->status === 'processing')
                         <div class="mb-6">
-                            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                                <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                            <div class="info-box">
+                                <p class="text-sm">
                                     Your infographic is being generated. Please refresh this page in a few moments.
                                 </p>
                             </div>
                         </div>
                     @elseif($generation->status === 'failed')
                         <div class="mb-6">
-                            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-                                <p class="text-sm text-red-800 dark:text-red-200">
+                            <div class="error-box">
+                                <p class="text-sm">
                                     Generation failed. Your credits have been refunded.
                                 </p>
                             </div>
