@@ -10,7 +10,7 @@
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <!-- Providers Card -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
                     <div class="p-6">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
@@ -38,7 +38,7 @@
                 </div>
 
                 <!-- Pricing Configs Card -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
                     <div class="p-6">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
@@ -66,7 +66,7 @@
                 </div>
 
                 <!-- Currency Rates Card -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
                     <div class="p-6">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
@@ -92,7 +92,7 @@
             </div>
 
             <!-- Quick Actions -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200 mb-8">
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Быстрые действия</h3>
                     <div class="flex flex-wrap gap-4">
@@ -110,7 +110,7 @@
             </div>
 
             <!-- Providers Overview -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200 mb-8">
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">AI Провайдеры</h3>
                     <div class="overflow-x-auto">
@@ -157,7 +157,7 @@
 
             <!-- Recent Updates -->
             @if($recentPricingUpdates->isNotEmpty())
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Последние обновления прайсинга</h3>
                     <div class="space-y-4">
