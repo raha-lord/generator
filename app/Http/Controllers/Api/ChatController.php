@@ -57,7 +57,7 @@ class ChatController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'service_code' => 'required|string|exists:chat.services,code',
+            'service_code' => 'required|string|exists:services,code',
             'title' => 'nullable|string|max:255',
             'metadata' => 'nullable|array',
         ]);

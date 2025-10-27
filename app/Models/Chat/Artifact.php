@@ -3,18 +3,19 @@
 namespace App\Models\Chat;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class Artifact extends ChatModel
+class Artifact extends Model
 {
     use HasFactory;
 
     /**
      * The table associated with the model.
      */
-    protected $table = 'chat.artifacts';
+    protected $table = 'artifacts';
 
     /**
      * Indicates if the model should be timestamped.

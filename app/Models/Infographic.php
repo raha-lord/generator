@@ -12,7 +12,7 @@ class Infographic extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'generations.infographics';
+    protected $table = 'infographics';
 
     /**
      * The attributes that are mass assignable.

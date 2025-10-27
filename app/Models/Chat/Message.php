@@ -3,17 +3,18 @@
 namespace App\Models\Chat;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Message extends ChatModel
+class Message extends Model
 {
     use HasFactory;
 
     /**
      * The table associated with the model.
      */
-    protected $table = 'chat.messages';
+    protected $table = 'messages';
 
     /**
      * Indicates if the model should be timestamped.

@@ -12,7 +12,7 @@ class Balance extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'balance.balances';
+    protected $table = 'balances';
 
     /**
      * The attributes that are mass assignable.

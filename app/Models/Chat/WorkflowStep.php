@@ -4,17 +4,18 @@ namespace App\Models\Chat;
 
 use App\Models\Pricing\AiProvider;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class WorkflowStep extends ChatModel
+class WorkflowStep extends Model
 {
     use HasFactory;
 
     /**
      * The table associated with the model.
      */
-    protected $table = 'chat.workflow_steps';
+    protected $table = 'workflow_steps';
 
     /**
      * The attributes that are mass assignable.
