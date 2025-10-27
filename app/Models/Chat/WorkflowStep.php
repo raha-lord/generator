@@ -4,11 +4,10 @@ namespace App\Models\Chat;
 
 use App\Models\Pricing\AiProvider;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class WorkflowStep extends Model
+class WorkflowStep extends ChatModel
 {
     use HasFactory;
 

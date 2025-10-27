@@ -3,12 +3,11 @@
 namespace App\Models\Chat;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class Artifact extends Model
+class Artifact extends ChatModel
 {
     use HasFactory;
 
