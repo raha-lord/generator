@@ -1,181 +1,113 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Generation History') }}
+            {{ __('Chat History') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            @if (session('success'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
+            <div x-data="chatList()">
+                <!-- Loading State -->
+                <div x-show="loading" class="text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <p class="mt-4 text-gray-600">Loading chats...</p>
                 </div>
-            @endif
 
-            @if (session('error'))
-                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
-                <div class="p-6 text-gray-900">
-
-                    <!-- Filters -->
-                    <div class="mb-6">
-                        <form method="GET" action="{{ route('history.index') }}" class="flex flex-wrap gap-4">
-
-                            <div class="flex-1 min-w-[200px]">
-                                <input
-                                    type="text"
-                                    name="search"
-                                    value="{{ $filters['search'] }}"
-                                    placeholder="Search by prompt..."
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
-                                >
-                            </div>
-
-                            <div>
-                                <select
-                                    name="status"
-                                    class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
-                                >
-                                    <option value="all" {{ $filters['status'] === 'all' ? 'selected' : '' }}>All Status</option>
-                                    <option value="pending" {{ $filters['status'] === 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="processing" {{ $filters['status'] === 'processing' ? 'selected' : '' }}>Processing</option>
-                                    <option value="completed" {{ $filters['status'] === 'completed' ? 'selected' : '' }}>Completed</option>
-                                    <option value="failed" {{ $filters['status'] === 'failed' ? 'selected' : '' }}>Failed</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <select
-                                    name="type"
-                                    class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
-                                >
-                                    <option value="all" {{ $filters['type'] === 'all' ? 'selected' : '' }}>All Types</option>
-                                    <option value="infographic" {{ $filters['type'] === 'infographic' ? 'selected' : '' }}>Infographic</option>
-                                    <option value="image" {{ $filters['type'] === 'image' ? 'selected' : '' }}>AI Image</option>
-                                </select>
-                            </div>
-
-                            <button
-                                type="submit"
-                                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            >
-                                Filter
-                            </button>
-
-                            @if($filters['search'] || $filters['status'] !== 'all' || $filters['type'] !== 'all')
-                                <a
-                                    href="{{ route('history.index') }}"
-                                    class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-                                >
-                                    Reset
-                                </a>
-                            @endif
-                        </form>
+                <!-- Empty State -->
+                <div x-show="!loading && chats.length === 0" class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200 p-12 text-center">
+                    <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                    <h3 class="mt-4 text-lg font-medium text-gray-900">No chats yet</h3>
+                    <p class="mt-2 text-gray-500">Get started by creating a new chat!</p>
+                    <div class="mt-6">
+                        <a href="{{ route('chats.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                            Create your first chat
+                        </a>
                     </div>
+                </div>
 
-                    <!-- Generations List -->
-                    @if($generations->count() > 0)
-                        <div class="space-y-4">
-                            @foreach($generations as $generation)
-                                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                                    <div class="flex justify-between items-start">
-                                        <div class="flex-1">
-                                            <div class="flex items-center gap-3 mb-2">
-                                                <h3 class="font-semibold">
-                                                    {{ class_basename($generation->generatable_type) }}
-                                                </h3>
-
-                                                <span class="text-xs px-2 py-1 rounded
-                                                    {{ $generation->status === 'completed' ? 'bg-green-100 text-green-800' : '' }}
-                                                    {{ $generation->status === 'processing' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                                    {{ $generation->status === 'failed' ? 'bg-red-100 text-red-800' : '' }}
-                                                    {{ $generation->status === 'pending' ? 'bg-gray-100 text-gray-800' : '' }}
-                                                ">
-                                                    {{ ucfirst($generation->status) }}
-                                                </span>
-
-                                                @if($generation->is_public)
-                                                    <span class="text-xs px-2 py-1 rounded bg-blue-100 text-blue-800">
-                                                        Public
-                                                    </span>
-                                                @endif
-                                            </div>
-
-                                            <p class="text-sm text-gray-600 mb-2">
-                                                {{ Str::limit($generation->prompt, 150) }}
-                                            </p>
-
-                                            <div class="flex gap-4 text-xs text-gray-500">
-                                                <span>Cost: {{ $generation->cost }} credits</span>
-                                                <span>•</span>
-                                                <span>Created: {{ $generation->created_at->diffForHumans() }}</span>
-                                                @if($generation->completed_at)
-                                                    <span>•</span>
-                                                    <span>Completed: {{ $generation->completed_at->diffForHumans() }}</span>
-                                                @endif
+                <!-- Chats Grid -->
+                <div x-show="!loading && chats.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="chat in chats" :key="chat.uuid">
+                        <a :href="`/chats/${chat.uuid}`" class="block">
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200 cursor-pointer">
+                                <div class="p-6">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex items-center space-x-3 flex-1">
+                                            <span class="text-3xl" x-text="chat.service.icon"></span>
+                                            <div class="flex-1 min-w-0">
+                                                <h3 class="text-lg font-semibold text-gray-900 truncate" x-text="chat.title"></h3>
+                                                <p class="text-sm text-gray-500" x-text="chat.service.name"></p>
                                             </div>
                                         </div>
-
-                                        <div class="flex flex-col gap-2 ml-4">
-                                            <a
-                                                href="{{ route('history.show', $generation->uuid) }}"
-                                                class="text-sm px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-center"
-                                            >
-                                                View
-                                            </a>
-
-                                            @if($generation->status === 'failed')
-                                                <form method="POST" action="{{ route('history.retry', $generation->uuid) }}">
-                                                    @csrf
-                                                    <button
-                                                        type="submit"
-                                                        class="text-sm px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700 w-full"
-                                                    >
-                                                        Retry
-                                                    </button>
-                                                </form>
-                                            @endif
-
-                                            <form method="POST" action="{{ route('history.destroy', $generation->uuid) }}" onsubmit="return confirm('Delete this generation?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button
-                                                    type="submit"
-                                                    class="text-sm px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 w-full"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </div>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                              :class="{
+                                                  'bg-green-100 text-green-800': chat.status === 'active',
+                                                  'bg-blue-100 text-blue-800': chat.status === 'completed',
+                                                  'bg-gray-100 text-gray-800': chat.status === 'archived'
+                                              }"
+                                              x-text="chat.status">
+                                        </span>
+                                    </div>
+                                    <div class="mt-4 flex items-center justify-between text-sm text-gray-500">
+                                        <span x-text="formatDate(chat.updated_at)"></span>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
-
-                        <!-- Pagination -->
-                        <div class="mt-6">
-                            {{ $generations->links() }}
-                        </div>
-                    @else
-                        <div class="text-center py-12">
-                            <p class="text-gray-500 mb-4">No generations found.</p>
-                            <a
-                                href="{{ route('infographic.create') }}"
-                                class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700"
-                            >
-                                Create Your First Infographic
-                            </a>
-                        </div>
-                    @endif
-
+                            </div>
+                        </a>
+                    </template>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function chatList() {
+            return {
+                chats: [],
+                loading: true,
+
+                init() {
+                    this.fetchChats();
+                },
+
+                async fetchChats() {
+                    try {
+                        const response = await fetch('/api/chats', {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            }
+                        });
+                        const data = await response.json();
+                        this.chats = data.chats;
+                    } catch (error) {
+                        console.error('Failed to fetch chats:', error);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                formatDate(dateString) {
+                    const date = new Date(dateString);
+                    const now = new Date();
+                    const diff = now - date;
+                    const hours = Math.floor(diff / 1000 / 60 / 60);
+
+                    if (hours < 24) {
+                        return hours === 0 ? 'Just now' : `${hours}h ago`;
+                    }
+
+                    const days = Math.floor(hours / 24);
+                    if (days < 7) {
+                        return `${days}d ago`;
+                    }
+
+                    return date.toLocaleDateString();
+                }
+            }
+        }
+    </script>
 </x-app-layout>

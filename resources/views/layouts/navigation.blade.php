@@ -18,12 +18,6 @@
                     <x-nav-link :href="route('chats.index')" :active="request()->routeIs('chats.*')">
                         {{ __('Chats') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('infographic.create')" :active="request()->routeIs('infographic.*')">
-                        {{ __('Infographic') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('image.create')" :active="request()->routeIs('image.*')">
-                        {{ __('AI Image') }}
-                    </x-nav-link>
                     <x-nav-link :href="route('history.index')" :active="request()->routeIs('history.*')">
                         {{ __('History') }}
                     </x-nav-link>
@@ -87,11 +81,8 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('infographic.create')" :active="request()->routeIs('infographic.*')">
-                {{ __('Infographic') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('image.create')" :active="request()->routeIs('image.*')">
-                {{ __('AI Image') }}
+            <x-responsive-nav-link :href="route('chats.index')" :active="request()->routeIs('chats.*')">
+                {{ __('Chats') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('history.index')" :active="request()->routeIs('history.*')">
                 {{ __('History') }}

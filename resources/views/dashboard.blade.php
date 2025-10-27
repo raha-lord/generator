@@ -36,61 +36,35 @@
             </div>
 
             <!-- Quick Actions -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
-                <!-- Generate Infographic Card -->
+                <!-- Chats Card -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-lg transition border border-gray-200">
                     <div class="p-6">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
-                                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-900">Generate Infographic</h3>
-                                <p class="text-sm text-gray-600">Cost: 10 credits</p>
+                                <h3 class="text-lg font-semibold text-gray-900">My Chats</h3>
+                                <p class="text-sm text-gray-600">AI Conversations</p>
                             </div>
                         </div>
                         <p class="text-sm text-gray-600 mb-4">
-                            Create beautiful infographics powered by AI
+                            Start a new conversation or continue existing chats
                         </p>
                         <a
-                            href="{{ route('infographic.create') }}"
-                            class="block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+                            href="{{ route('chats.index') }}"
+                            class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
                         >
-                            Start Generating
+                            Go to Chats
                         </a>
                     </div>
                 </div>
 
-                <!-- Generate AI Image Card -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-lg transition border border-gray-200">
-                    <div class="p-6">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-900">Generate AI Image</h3>
-                                <p class="text-sm text-gray-600">Cost: 5 credits</p>
-                            </div>
-                        </div>
-                        <p class="text-sm text-gray-600 mb-4">
-                            Create stunning images with Pollinations.ai
-                        </p>
-                        <a
-                            href="{{ route('image.create') }}"
-                            class="block w-full text-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
-                        >
-                            Start Generating
-                        </a>
-                    </div>
-                </div>
-
-                <!-- View History Card -->
+                <!-- Chat History Card -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-lg transition border border-gray-200">
                     <div class="p-6">
                         <div class="flex items-center mb-4">
@@ -100,12 +74,12 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-900">Generation History</h3>
-                                <p class="text-sm text-gray-600">View all generations</p>
+                                <h3 class="text-lg font-semibold text-gray-900">Chat History</h3>
+                                <p class="text-sm text-gray-600">View past chats</p>
                             </div>
                         </div>
                         <p class="text-sm text-gray-600 mb-4">
-                            Access and manage your previous generations
+                            Access and manage your previous conversations
                         </p>
                         <a
                             href="{{ route('history.index') }}"
@@ -121,9 +95,9 @@
             <!-- Recent Activity -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
                 <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-semibold mb-4">Welcome to AI Content Generator!</h3>
+                    <h3 class="text-lg font-semibold mb-4">Welcome to AI Chat Platform!</h3>
                     <p class="text-gray-600">
-                        Get started by generating your first infographic or check out your generation history.
+                        Start a new conversation with AI or review your chat history.
                     </p>
                 </div>
             </div>
