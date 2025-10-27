@@ -18,8 +18,8 @@
     </x-slot>
 
     <div class="h-[calc(100vh-8rem)]">
-        <div class="max-w-5xl mx-auto h-full sm:px-6 lg:px-8 py-6">
-            <div class="bg-white shadow-sm sm:rounded-lg h-full flex flex-col" x-data="chatInterface('{{ $chatUuid }}')">
+        <div class="max-w-7xl mx-auto h-full sm:px-6 lg:px-8 py-6">
+            <div class="bg-white shadow-sm sm:rounded-lg border border-gray-200 h-full flex flex-col" x-data="chatInterface('{{ $chatUuid }}')">
 
                 <!-- Progress Bar (for multi-step services) -->
                 <div x-show="chat && chat.service.type === 'multi_step'" class="p-4 border-b border-gray-200 bg-gray-50">

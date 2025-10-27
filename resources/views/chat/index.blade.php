@@ -23,7 +23,7 @@
                 </div>
 
                 <!-- Empty State -->
-                <div x-show="!loading && chats.length === 0" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-12 text-center">
+                <div x-show="!loading && chats.length === 0" class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200 p-12 text-center">
                     <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                     </svg>
@@ -40,7 +40,7 @@
                 <div x-show="!loading && chats.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <template x-for="chat in chats" :key="chat.uuid">
                         <a :href="`/chats/${chat.uuid}`" class="block">
-                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition-shadow duration-200 cursor-pointer">
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200 cursor-pointer">
                                 <div class="p-6">
                                     <div class="flex items-start justify-between">
                                         <div class="flex items-center space-x-3 flex-1">
