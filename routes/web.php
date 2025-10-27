@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CurrencyRateController;
 use App\Http\Controllers\Admin\ProviderPricingController;
+use App\Http\Controllers\ChatViewController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\GenerationHistoryController;
 use App\Http\Controllers\ImageController;
@@ -50,6 +51,13 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{uuid}', [GenerationHistoryController::class, 'destroy'])->name('destroy');
         Route::post('/{uuid}/toggle-public', [GenerationHistoryController::class, 'togglePublic'])->name('togglePublic');
         Route::post('/{uuid}/retry', [GenerationHistoryController::class, 'retry'])->name('retry');
+    });
+
+    // Chat routes
+    Route::prefix('chats')->name('chats.')->group(function () {
+        Route::get('/', [ChatViewController::class, 'index'])->name('index');
+        Route::get('/create', [ChatViewController::class, 'create'])->name('create');
+        Route::get('/{uuid}', [ChatViewController::class, 'show'])->name('show');
     });
 });
 
