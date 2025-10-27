@@ -14,7 +14,7 @@ class ChatServicesSeeder extends Seeder
     {
         // Get Gemini provider ID
         $geminiProvider = DB::table('pricing.ai_providers')
-            ->where('code', 'gemini')
+            ->where('name', 'gemini')
             ->first();
 
         if (!$geminiProvider) {
@@ -61,7 +61,7 @@ class ChatServicesSeeder extends Seeder
 
         // Create Image Generation service
         $pollinationsProvider = DB::table('pricing.ai_providers')
-            ->where('code', 'pollinations')
+            ->where('name', 'pollinations')
             ->first();
 
         if ($pollinationsProvider) {
