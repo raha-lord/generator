@@ -45,16 +45,29 @@
                     </div>
 
                     <!-- Messages -->
-                    <template x-for="message in messages" :key="message.id">
+                    <template x-for="message in messages" :key="message.id || message.temp_id">
                         <div class="flex" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
                             <div class="max-w-3xl"
-                                 :class="message.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'"
+                                 :class="{
+                                     'bg-blue-600 text-white': message.role === 'user',
+                                     'bg-gray-100 text-gray-900': message.role === 'assistant',
+                                     'bg-red-50 text-red-800 border border-red-200': message.role === 'error',
+                                     'opacity-50': message.sending
+                                 }"
                                  class="rounded-lg px-4 py-3">
                                 <div class="flex items-start space-x-2">
                                     <div class="flex-1">
+                                        <!-- Error icon for error messages -->
+                                        <div x-show="message.role === 'error'" class="flex items-center space-x-2 mb-2">
+                                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            <span class="font-semibold text-sm">Error</span>
+                                        </div>
                                         <p class="text-sm whitespace-pre-wrap" x-text="message.content"></p>
                                         <div class="mt-2 flex items-center justify-between text-xs opacity-75">
-                                            <span x-text="formatTime(message.created_at)"></span>
+                                            <span x-show="message.created_at" x-text="formatTime(message.created_at)"></span>
+                                            <span x-show="message.sending" class="text-xs">Sending...</span>
                                             <span x-show="message.credits_spent > 0" class="ml-3">
                                                 💎 <span x-text="message.credits_spent"></span>
                                             </span>
@@ -162,19 +175,42 @@
                         }
                     } catch (error) {
                         console.error('Failed to load chat:', error);
-                        alert('Failed to load chat');
+                        this.addErrorMessage('Failed to load chat. Please refresh the page.');
                     } finally {
                         this.loading = false;
                     }
                 },
 
+                addErrorMessage(errorText) {
+                    this.messages.push({
+                        temp_id: Date.now(),
+                        role: 'error',
+                        content: errorText,
+                        created_at: new Date().toISOString(),
+                        credits_spent: 0
+                    });
+                    this.scrollToBottom();
+                },
+
                 async sendMessage() {
                     if (!this.input.trim() || this.sending) return;
 
-                    const message = this.input;
+                    const messageText = this.input;
                     this.input = '';
                     this.sending = true;
                     this.waitingForConfirmation = false;
+
+                    // Add user message optimistically
+                    const tempId = Date.now();
+                    this.messages.push({
+                        temp_id: tempId,
+                        role: 'user',
+                        content: messageText,
+                        created_at: new Date().toISOString(),
+                        credits_spent: 0,
+                        sending: true
+                    });
+                    this.scrollToBottom();
 
                     try {
                         const response = await fetch(`/api/chats/${this.chatUuid}/message`, {
@@ -184,13 +220,13 @@
                                 'Accept': 'application/json',
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                             },
-                            body: JSON.stringify({ message })
+                            body: JSON.stringify({ message: messageText })
                         });
 
                         const data = await response.json();
 
                         if (data.success) {
-                            // Reload chat to get updated messages
+                            // Reload chat to get updated messages (removes temp message and adds real ones)
                             await this.loadChat();
 
                             // Check if we need confirmation
@@ -198,11 +234,16 @@
                                 this.waitingForConfirmation = true;
                             }
                         } else {
-                            alert('Error: ' + data.message);
+                            // Remove the temporary message
+                            this.messages = this.messages.filter(m => m.temp_id !== tempId);
+                            // Show error
+                            this.addErrorMessage(data.message || 'Failed to send message');
                         }
                     } catch (error) {
                         console.error('Failed to send message:', error);
-                        alert('Failed to send message');
+                        // Remove the temporary message
+                        this.messages = this.messages.filter(m => m.temp_id !== tempId);
+                        this.addErrorMessage('Network error. Please check your connection and try again.');
                     } finally {
                         this.sending = false;
                     }
@@ -225,9 +266,17 @@
 
                         if (data.success) {
                             await this.loadChat();
+
+                            // Check if we need another confirmation
+                            if (data.requires_confirmation) {
+                                this.waitingForConfirmation = true;
+                            }
+                        } else {
+                            this.addErrorMessage(data.message || 'Failed to continue workflow');
                         }
                     } catch (error) {
                         console.error('Failed to continue workflow:', error);
+                        this.addErrorMessage('Network error. Please check your connection and try again.');
                     } finally {
                         this.sending = false;
                     }
