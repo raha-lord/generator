@@ -35,7 +35,7 @@
                 </div>
 
                 <!-- Messages Container -->
-                <div class="flex-1 overflow-y-auto p-6 space-y-4" x-ref="messagesContainer">
+                <div class="flex-1 overflow-y-auto p-6 space-y-6" x-ref="messagesContainer">
                     <!-- Loading State -->
                     <div x-show="loading && messages.length === 0" class="flex justify-center items-center h-full">
                         <div class="text-center">
@@ -49,23 +49,25 @@
                         <div class="flex" :class="message.role === 'user' ? 'justify-end' : 'justify-start'">
                             <div class="max-w-3xl"
                                  :class="{
-                                     'bg-blue-600 text-white': message.role === 'user',
-                                     'bg-gray-100 text-gray-900': message.role === 'assistant',
-                                     'bg-red-50 text-red-800 border border-red-200': message.role === 'error',
+                                     'bg-blue-600 text-white rounded-2xl rounded-br-md': message.role === 'user',
+                                     'bg-gray-100 text-gray-900 rounded-2xl rounded-bl-md': message.role === 'assistant',
+                                     'bg-red-50 text-red-800 border border-red-200 rounded-2xl': message.role === 'error',
                                      'opacity-50': message.sending
                                  }"
-                                 class="rounded-lg px-4 py-3">
+                                 class="px-5 py-4 shadow-sm">
                                 <div class="flex items-start space-x-2">
                                     <div class="flex-1">
                                         <!-- Error icon for error messages -->
-                                        <div x-show="message.role === 'error'" class="flex items-center space-x-2 mb-2">
+                                        <div x-show="message.role === 'error'" class="flex items-center space-x-2 mb-3">
                                             <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                             </svg>
                                             <span class="font-semibold text-sm">Error</span>
                                         </div>
-                                        <p class="text-sm whitespace-pre-wrap" x-text="message.content"></p>
-                                        <div class="mt-2 flex items-center justify-between text-xs opacity-75">
+                                        <div class="prose prose-sm max-w-none"
+                                             :class="{'prose-invert': message.role === 'user'}"
+                                             x-html="formatMarkdown(message.content)"></div>
+                                        <div class="mt-3 flex items-center justify-between text-xs opacity-75">
                                             <span x-show="message.created_at" x-text="formatTime(message.created_at)"></span>
                                             <span x-show="message.sending" class="text-xs">Sending...</span>
                                             <span x-show="message.credits_spent > 0" class="ml-3">
@@ -90,8 +92,8 @@
 
                     <!-- Sending Indicator -->
                     <div x-show="sending" class="flex justify-start">
-                        <div class="bg-gray-100 rounded-lg px-4 py-3">
-                            <div class="flex items-center space-x-2">
+                        <div class="bg-gray-100 rounded-2xl rounded-bl-md px-5 py-4 shadow-sm">
+                            <div class="flex items-center space-x-3">
                                 <div class="flex space-x-1">
                                     <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style="animation-delay: 0s"></div>
                                     <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
@@ -297,6 +299,30 @@
                         hour: '2-digit',
                         minute: '2-digit'
                     });
+                },
+
+                formatMarkdown(text) {
+                    if (!text) return '';
+
+                    // Simple markdown formatting without external library
+                    let formatted = text
+                        // Bold: **text** or __text__
+                        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/__(.+?)__/g, '<strong>$1</strong>')
+                        // Italic: *text* or _text_
+                        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                        .replace(/_(.+?)_/g, '<em>$1</em>')
+                        // Code: `code`
+                        .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 bg-black bg-opacity-10 rounded text-xs">$1</code>')
+                        // Links: [text](url)
+                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="underline hover:no-underline" target="_blank" rel="noopener">$1</a>')
+                        // Line breaks
+                        .replace(/\n/g, '<br>');
+
+                    // Code blocks: ```code```
+                    formatted = formatted.replace(/```([^`]+)```/g, '<pre class="bg-black bg-opacity-10 rounded p-3 my-2 overflow-x-auto"><code>$1</code></pre>');
+
+                    return formatted;
                 }
             }
         }
