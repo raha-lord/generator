@@ -13,42 +13,16 @@ use Illuminate\View\View;
 class GenerationHistoryController extends Controller
 {
     /**
-     * Display user's generation history.
+     * Display user's chat history.
      *
      * @param Request $request
      * @return View
      */
     public function index(Request $request): View
     {
-        $query = Generation::with(['generatable', 'user'])
-            ->where('user_id', $request->user()->id)
-            ->orderBy('created_at', 'desc');
-
-        // Filter by status
-        if ($request->has('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
-        }
-
-        // Filter by type
-        if ($request->has('type') && $request->type !== 'all') {
-            $query->where('generatable_type', 'like', '%' . ucfirst($request->type));
-        }
-
-        // Search by prompt
-        if ($request->filled('search')) {
-            $query->where('prompt', 'ilike', '%' . $request->search . '%');
-        }
-
-        $generations = $query->paginate(20)->withQueryString();
-
-        return view('history.index', [
-            'generations' => $generations,
-            'filters' => [
-                'status' => $request->status ?? 'all',
-                'type' => $request->type ?? 'all',
-                'search' => $request->search ?? '',
-            ],
-        ]);
+        // History page now shows chats instead of generations
+        // Data is loaded via JavaScript from /api/chats endpoint
+        return view('history.index');
     }
 
     /**
