@@ -46,7 +46,7 @@ class AIServiceFactory
         // If provider ID is specified, get provider from database
         if ($providerId) {
             $provider = AiProvider::findOrFail($providerId);
-            $providerCode = $provider->code;
+            $providerCode = $provider->name; // Use 'name' column, not 'code'
         } else {
             // Use default provider for model type
             $providerCode = self::getDefaultProvider($modelType);
