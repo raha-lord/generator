@@ -53,13 +53,10 @@ class WorkflowEngine
             $cost = $this->calculateStepCost($step, $userInput);
 
             // Check user balance
-            $balance = $this->balanceService->getBalance($chat->user);
-            if ($balance->available < $cost) {
-                throw new \Exception('Insufficient credits. Required: ' . $cost . ', Available: ' . $balance->available);
+            $balance = $chat->user->balance;
+            if (!$balance || !$balance->hasEnoughCredits((int)$cost)) {
+                throw new \Exception('Insufficient credits. Required: ' . $cost . ', Available: ' . ($balance->available_credits ?? 0));
             }
-
-            // Reserve credits
-            $transaction = $this->balanceService->reserve($chat->user, $cost, "Step: {$step->name}");
 
             // Get conversation context
             $rawMessages = $this->contextStorage->getMessages($chat);
@@ -91,8 +88,18 @@ class WorkflowEngine
             // Handle different result types
             $responseContent = is_array($result) ? json_encode($result) : $result;
 
-            // Deduct reserved credits
-            $this->balanceService->deductReserved($transaction);
+            // Deduct credits (only after successful generation)
+            $deducted = $this->balanceService->deduct(
+                $chat->user,
+                (int)$cost,
+                "Chat step: {$step->name}",
+                'chat_message',
+                null
+            );
+
+            if (!$deducted) {
+                throw new \Exception('Failed to deduct credits');
+            }
 
             // Save assistant message
             $assistantMessage = $this->messageService->createAssistantMessage(
@@ -126,11 +133,6 @@ class WorkflowEngine
 
         } catch (\Exception $e) {
             DB::rollBack();
-
-            // Refund reserved credits if transaction exists
-            if (isset($transaction)) {
-                $this->balanceService->refund($transaction, 'Step execution failed');
-            }
 
             Log::error('Workflow step execution failed', [
                 'chat_id' => $chat->id,
