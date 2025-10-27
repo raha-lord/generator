@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Infographic Details') }}
         </h2>
     </x-slot>
@@ -14,8 +14,8 @@
                 </div>
             @endif
 
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
+                <div class="p-6 text-gray-900">
 
                     <!-- Generation Info -->
                     <div class="mb-6">
@@ -23,44 +23,44 @@
 
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             <div>
-                                <span class="text-gray-600 dark:text-gray-400">Status:</span>
+                                <span class="text-gray-600">Status:</span>
                                 <span class="ml-2 font-medium">
                                     @if($generation->status === 'completed')
-                                        <span class="text-green-600 dark:text-green-400">✓ Completed</span>
+                                        <span class="text-green-600">✓ Completed</span>
                                     @elseif($generation->status === 'processing')
-                                        <span class="text-yellow-600 dark:text-yellow-400">⏳ Processing</span>
+                                        <span class="text-yellow-600">⏳ Processing</span>
                                     @elseif($generation->status === 'failed')
-                                        <span class="text-red-600 dark:text-red-400">✗ Failed</span>
+                                        <span class="text-red-600">✗ Failed</span>
                                     @else
-                                        <span class="text-gray-600 dark:text-gray-400">{{ ucfirst($generation->status) }}</span>
+                                        <span class="text-gray-600">{{ ucfirst($generation->status) }}</span>
                                     @endif
                                 </span>
                             </div>
 
                             <div>
-                                <span class="text-gray-600 dark:text-gray-400">Cost:</span>
+                                <span class="text-gray-600">Cost:</span>
                                 <span class="ml-2 font-medium">{{ $generation->cost }} credits</span>
                             </div>
 
                             <div>
-                                <span class="text-gray-600 dark:text-gray-400">Created:</span>
+                                <span class="text-gray-600">Created:</span>
                                 <span class="ml-2 font-medium">{{ $generation->created_at->format('Y-m-d H:i:s') }}</span>
                             </div>
 
                             <div>
-                                <span class="text-gray-600 dark:text-gray-400">Completed:</span>
+                                <span class="text-gray-600">Completed:</span>
                                 <span class="ml-2 font-medium">
                                     {{ $generation->completed_at ? $generation->completed_at->format('Y-m-d H:i:s') : 'N/A' }}
                                 </span>
                             </div>
 
                             <div class="col-span-2">
-                                <span class="text-gray-600 dark:text-gray-400">UUID:</span>
+                                <span class="text-gray-600">UUID:</span>
                                 <span class="ml-2 font-mono text-xs">{{ $generation->uuid }}</span>
                             </div>
 
                             <div class="col-span-2">
-                                <span class="text-gray-600 dark:text-gray-400">Visibility:</span>
+                                <span class="text-gray-600">Visibility:</span>
                                 <span class="ml-2 font-medium">
                                     {{ $generation->is_public ? 'Public' : 'Private' }}
                                 </span>
@@ -80,7 +80,7 @@
                     @if($generation->status === 'completed' && $generation->result_path)
                         <div class="mb-6">
                             <h3 class="text-lg font-semibold mb-3">Generated Infographic</h3>
-                            <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                            <div class="bg-gray-50 p-4 rounded-lg">
                                 @if($generation->generatable && $generation->generatable->image_path)
                                     <div class="flex justify-center">
                                         <img
@@ -101,7 +101,7 @@
                                         </a>
                                     </div>
                                 @else
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Image not available</p>
+                                    <p class="text-sm text-gray-500">Image not available</p>
                                 @endif
                             </div>
                         </div>
@@ -124,8 +124,8 @@
                     @endif
 
                     <!-- Actions -->
-                    <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
-                        <a href="{{ route('history.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                        <a href="{{ route('history.index') }}" class="text-sm text-gray-600 hover:text-gray-900">
                             View All Generations
                         </a>
 

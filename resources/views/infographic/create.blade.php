@@ -1,13 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Generate Infographic') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white border border-gray-200 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 ">
                     
                     @if (session('error'))
@@ -22,14 +22,14 @@
                         </div>
                     @endif
 
-                    <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                    <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <p class="text-sm text-gray-600">
                             Available credits: <strong>{{ auth()->user()->balance->available_credits }}</strong>
                         </p>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                        <p class="text-sm text-gray-600">
                             Estimated cost: <strong id="estimated-cost">~10 credits</strong>
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <p class="text-xs text-gray-500 mt-1">
                             Cost = Slides × Cost per slide (varies by provider and resolution)
                         </p>
                     </div>
@@ -38,38 +38,38 @@
                         @csrf
 
                         <div class="mb-4">
-                            <label for="prompt" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label for="prompt" class="block text-sm font-medium text-gray-700 mb-2">
                                 Infographic Topic or Description
                             </label>
-                            <textarea 
-                                name="prompt" 
-                                id="prompt" 
+                            <textarea
+                                name="prompt"
+                                id="prompt"
                                 rows="5"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  "
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  "
                                 placeholder="Describe the infographic you want to create. For example: 'Create an infographic about the benefits of renewable energy' or 'Statistics on global warming trends'"
                                 required
                                 minlength="10"
                                 maxlength="1000"
                             >{{ old('prompt', session('prompt')) }}</textarea>
-                            
+
                             @error('prompt')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                            
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+
+                            <p class="mt-1 text-xs text-gray-500">
                                 Enter between 10 and 1000 characters
                             </p>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label for="provider_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label for="provider_id" class="block text-sm font-medium text-gray-700 mb-2">
                                     AI Provider
                                 </label>
                                 <select
                                     name="provider_id"
                                     id="provider_id"
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 >
                                     @foreach($providers as $provider)
                                         <option value="{{ $provider->id }}" {{ old('provider_id', 2) == $provider->id ? 'selected' : '' }}>
@@ -79,12 +79,12 @@
                                 </select>
 
                                 @error('provider_id')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div>
-                                <label for="slides_count" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label for="slides_count" class="block text-sm font-medium text-gray-700 mb-2">
                                     Number of Slides
                                 </label>
                                 <input
@@ -94,13 +94,13 @@
                                     min="1"
                                     max="10"
                                     value="{{ old('slides_count', 1) }}"
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 />
 
                                 @error('slides_count')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
-                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                <p class="mt-1 text-xs text-gray-500">
                                     Generate 1-10 slides for your infographic
                                 </p>
                             </div>
@@ -108,7 +108,7 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label for="width" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label for="width" class="block text-sm font-medium text-gray-700 mb-2">
                                     Width (px)
                                 </label>
                                 <input
@@ -119,16 +119,16 @@
                                     max="4096"
                                     step="64"
                                     value="{{ old('width', 1024) }}"
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 />
 
                                 @error('width')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <div>
-                                <label for="height" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label for="height" class="block text-sm font-medium text-gray-700 mb-2">
                                     Height (px)
                                 </label>
                                 <input
@@ -139,23 +139,23 @@
                                     max="4096"
                                     step="64"
                                     value="{{ old('height', 1024) }}"
-                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 />
 
                                 @error('height')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
 
                         <div class="mb-4">
-                            <label for="style" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label for="style" class="block text-sm font-medium text-gray-700 mb-2">
                                 Visual Style (Optional)
                             </label>
-                            <select 
-                                name="style" 
+                            <select
+                                name="style"
                                 id="style"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  "
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  "
                             >
                                 <option value="">Default</option>
                                 <option value="modern" {{ old('style') === 'modern' ? 'selected' : '' }}>Modern</option>
@@ -164,34 +164,34 @@
                                 <option value="colorful" {{ old('style') === 'colorful' ? 'selected' : '' }}>Colorful</option>
                                 <option value="professional" {{ old('style') === 'professional' ? 'selected' : '' }}>Professional</option>
                             </select>
-                            
+
                             @error('style')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="mb-6">
-                            <label for="format" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label for="format" class="block text-sm font-medium text-gray-700 mb-2">
                                 Output Format (Optional)
                             </label>
-                            <select 
-                                name="format" 
+                            <select
+                                name="format"
                                 id="format"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  "
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  "
                             >
                                 <option value="">Default (PNG)</option>
                                 <option value="png" {{ old('format') === 'png' ? 'selected' : '' }}>PNG</option>
                                 <option value="jpg" {{ old('format') === 'jpg' ? 'selected' : '' }}>JPG</option>
                                 <option value="svg" {{ old('format') === 'svg' ? 'selected' : '' }}>SVG</option>
                             </select>
-                            
+
                             @error('format')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="flex items-center justify-between">
-                            <a href="{{ route('dashboard') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+                            <a href="{{ route('dashboard') }}" class="text-sm text-gray-600 hover:text-gray-900">
                                 Back to Dashboard
                             </a>
                             
