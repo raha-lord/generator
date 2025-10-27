@@ -10,7 +10,7 @@ class ProviderPricing extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'pricing.provider_pricing';
+    protected $table = 'provider_pricing';
 
     /**
      * The attributes that are mass assignable.

@@ -13,7 +13,7 @@ class BalanceTransaction extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'balance.balance_transactions';
+    protected $table = 'balance_transactions';
 
     /**
      * The attributes that are mass assignable.

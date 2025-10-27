@@ -17,7 +17,7 @@ class AiProvider extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'pricing.ai_providers';
+    protected $table = 'ai_providers';
 
     /**
      * The attributes that are mass assignable.

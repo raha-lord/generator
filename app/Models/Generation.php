@@ -14,7 +14,7 @@ class Generation extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'generations.generations';
+    protected $table = 'generations';
 
     /**
      * The attributes that are mass assignable.

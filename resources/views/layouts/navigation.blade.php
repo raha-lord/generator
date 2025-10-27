@@ -15,6 +15,9 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('chats.index')" :active="request()->routeIs('chats.*')">
+                        {{ __('Chats') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('infographic.create')" :active="request()->routeIs('infographic.*')">
                         {{ __('Infographic') }}
                     </x-nav-link>

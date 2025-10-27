@@ -12,7 +12,7 @@ class Image extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'generations.images';
+    protected $table = 'images';
 
     /**
      * The attributes that are mass assignable.

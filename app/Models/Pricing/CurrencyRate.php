@@ -10,7 +10,7 @@ class CurrencyRate extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'pricing.currency_rates';
+    protected $table = 'currency_rates';
 
     /**
      * The attributes that are mass assignable.
