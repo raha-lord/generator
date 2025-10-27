@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CurrencyRateController;
 use App\Http\Controllers\Admin\ProviderPricingController;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\ChatViewController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\GenerationHistoryController;
@@ -53,11 +54,22 @@ Route::middleware('auth')->group(function () {
         Route::post('/{uuid}/retry', [GenerationHistoryController::class, 'retry'])->name('retry');
     });
 
-    // Chat routes
+    // Chat routes (views)
     Route::prefix('chats')->name('chats.')->group(function () {
         Route::get('/', [ChatViewController::class, 'index'])->name('index');
         Route::get('/create', [ChatViewController::class, 'create'])->name('create');
         Route::get('/{uuid}', [ChatViewController::class, 'show'])->name('show');
+    });
+
+    // Chat API routes (AJAX endpoints)
+    Route::prefix('api/chats')->group(function () {
+        Route::get('/', [ChatController::class, 'index']);
+        Route::post('/', [ChatController::class, 'store']);
+        Route::get('/{uuid}', [ChatController::class, 'show']);
+        Route::delete('/{uuid}', [ChatController::class, 'destroy']);
+        Route::post('/{uuid}/message', [ChatController::class, 'sendMessage']);
+        Route::post('/{uuid}/continue', [ChatController::class, 'continueWorkflow']);
+        Route::patch('/{uuid}/title', [ChatController::class, 'updateTitle']);
     });
 });
 

@@ -1,26 +1,15 @@
 <?php
 
-use App\Http\Controllers\Api\ChatController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
+|
+| Note: API routes have been moved to web.php for session-based auth
+| This file is kept for future API endpoints that need token-based auth
+|
 */
 
-Route::middleware('auth')->group(function () {
-
-    // Chat endpoints
-    Route::prefix('chats')->group(function () {
-        Route::get('/', [ChatController::class, 'index']);
-        Route::post('/', [ChatController::class, 'store']);
-        Route::get('/{uuid}', [ChatController::class, 'show']);
-        Route::delete('/{uuid}', [ChatController::class, 'destroy']);
-
-        // Chat actions
-        Route::post('/{uuid}/message', [ChatController::class, 'sendMessage']);
-        Route::post('/{uuid}/continue', [ChatController::class, 'continueWorkflow']);
-        Route::patch('/{uuid}/title', [ChatController::class, 'updateTitle']);
-    });
-});
+// Future token-based API routes will go here
